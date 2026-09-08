@@ -1,1 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>ClearKey API</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .box {
+            background: #1d1d1d;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background: #111;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .url {
+            margin-top: 15px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ClearKey API</h1>
+
+    <p>HEX → Base64URL → ClearKey JSON</p>
+
+    <div class="box">
+
+        <label>Key ID HEX</label>
+
+        <input
+            id="keyid"
+            type="text"
+            placeholder="32 caracteres HEX"
+        >
+
+        <label>Key HEX</label>
+
+        <input
+            id="key"
+            type="text"
+            placeholder="32 caracteres HEX"
+        >
+
+        <button onclick="generar()">
+            GENERAR
+        </button>
+
+        <pre id="resultado"></pre>
+
+        <div class="url">
+            <strong>URL:</strong>
+            <div id="url"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function generar() {
+
+    const keyid = document
+        .getElementById('keyid')
+        .value
+        .trim();
+
+    const key = document
+        .getElementById('key')
+        .value
+        .trim();
+
+    if (!keyid || !key) {
+
+        alert('Introduce Key ID y Key');
+
+        return;
+    }
+
+    const url =
+        window.location.origin +
+        '/api/results.php?keyid=' +
+        encodeURIComponent(keyid) +
+        '&key=' +
+        encodeURIComponent(key);
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+
+            document.getElementById('resultado')
+                .textContent =
+                JSON.stringify(data, null, 2);
+
+            document.getElementById('url')
+                .textContent = url;
+
+        })
+        .catch(error => {
+
+            document.getElementById('resultado')
+                .textContent =
+                'Error: ' + error;
+
+        });
+}
+
+</script>
+
+</body>
+</html>
